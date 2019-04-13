@@ -1,14 +1,5 @@
 package com.company.enroller.persistence;
 
-/*
- * The author disclaims copyright to this source code. In place of
- * a legal notice, here is a blessing:
- * 
- * May you do good and not evil.
- * May you find forgiveness for yourself and forgive others.
- * May you share freely, never taking more than you give.
- *
- */
 import java.sql.Types;
 
 import org.hibernate.dialect.Dialect;
@@ -39,7 +30,6 @@ public class SQLiteDialect extends Dialect {
 		registerColumnType(Types.BINARY, "blob");
 		registerColumnType(Types.VARBINARY, "blob");
 		registerColumnType(Types.LONGVARBINARY, "blob");
-		// registerColumnType(Types.NULL, "null");
 		registerColumnType(Types.BLOB, "blob");
 		registerColumnType(Types.CLOB, "clob");
 		registerColumnType(Types.BOOLEAN, "integer");
@@ -58,24 +48,9 @@ public class SQLiteDialect extends Dialect {
 		return true;
 	}
 
-	/*
-	 public boolean supportsInsertSelectIdentity() {
-	 return true; // As specify in NHibernate dialect
-	 }
-	 */
-
 	public boolean hasDataTypeInIdentityColumn() {
 		return false; // As specify in NHibernate dialect
 	}
-
-	/*
-	 public String appendIdentitySelectToInsert(String insertString) {
-	 return new StringBuffer(insertString.length()+30). // As specify in NHibernate dialect
-	 append(insertString).
-	 append("; ").append(getIdentitySelectString()).
-	 toString();
-	 }
-	 */
 
 	public String getIdentityColumnString() {
 		// return "integer primary key autoincrement";
