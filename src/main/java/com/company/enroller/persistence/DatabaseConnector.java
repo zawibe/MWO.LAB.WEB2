@@ -14,6 +14,7 @@ public class DatabaseConnector {
 	}
 
 	private Session session;
+	public javax.websocket.Session getSession;
 
 	private DatabaseConnector() {
 		session = HibernateUtil.getSessionFactory().openSession();
