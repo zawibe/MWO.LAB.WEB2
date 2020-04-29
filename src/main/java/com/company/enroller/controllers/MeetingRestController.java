@@ -11,31 +11,58 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.company.enroller.model.Meeting;
 import com.company.enroller.model.Participant;
+import com.company.enroller.persistence.MeetingService;
 import com.company.enroller.persistence.ParticipantService;
- 
+
 @RestController
-@RequestMapping("/participants")
-public class ParticipantRestController {
+@RequestMapping("/meetings")
+public class MeetingRestController {
 
 	@Autowired
-	ParticipantService participantService;
+	MeetingService meetingService;
 
 	@RequestMapping(value = "", method = RequestMethod.GET)
-	public ResponseEntity<?> getParticipants() {
-		Collection<Participant> participants = participantService.getAll();
-		return new ResponseEntity<Collection<Participant>>(participants, HttpStatus.OK);
+	public ResponseEntity<?> getMeetings() {
+		Collection<Meeting> meetings = meetingService.getAll();
+		return new ResponseEntity<Collection<Meeting>>(meetings, HttpStatus.OK);
 	}
-
+	
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
-	public ResponseEntity<?> getParticipant(@PathVariable("id") String login) {
-	    Participant participant = participantService.findByLogin(login);
-	if (participant == null) { 
+	public ResponseEntity<?> getMeeting(@PathVariable("id") long id) {
+	    Meeting meeting = meetingService.findById(id);
+	if (meeting == null) { 
 	return new ResponseEntity(HttpStatus.NOT_FOUND);
 	} 
-
-	return new ResponseEntity<Participant>(participant, HttpStatus.OK); 
+	return new ResponseEntity<Meeting>(meeting, HttpStatus.OK); 
 	}
+	
+	@RequestMapping(value = "", method = RequestMethod.POST) 
+	public ResponseEntity<?> registerMeeting(@RequestBody Meeting meeting){
+	Meeting foundMeeting = meetingService.findById(meeting.getId());
+	if (foundMeeting != null) { 
+	return new ResponseEntity<String>("Unable to register. Participant with login " +  
+	meeting.getId() + "already exist", HttpStatus.CONFLICT);
+}
+	meetingService.add(meeting);
+	return new ResponseEntity<Meeting>(meeting, HttpStatus.CREATED);
+			
+}
+	/*
+	
+	//2.2
+	@RequestMapping(value = "/{id}/participants", method = RequestMethod.GET)
+	public ResponseEntity<?> getMeetingParticipants(@PathVariable("id") long id) {
+	    Meeting meeting = meetingService.findById(id);
+	if (meeting == null) { 
+	return new ResponseEntity(HttpStatus.NOT_FOUND);
+	} 
+	meeting.getParticipants();
+	return new ResponseEntity<Meeting>(meeting, HttpStatus.OK); 
+	}
+	
+	/*
 	
 	@RequestMapping(value = "", method = RequestMethod.POST) 
 	public ResponseEntity<?> registerParticipant(@RequestBody Participant participant){
@@ -71,5 +98,5 @@ public class ParticipantRestController {
 	return new ResponseEntity<Participant>(foundParticipant, HttpStatus.OK);
 			
 }
-	
+	*/
 }

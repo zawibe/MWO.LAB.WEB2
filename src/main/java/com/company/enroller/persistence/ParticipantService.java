@@ -27,17 +27,24 @@ public class ParticipantService {
 	
 	
 	public Participant add(Participant participant) {
-	Transaction transaction = this.session.beginTransaction();
-	session.save(participant);
-	transaction.commit();
-	return participant;
+		Transaction transaction = this.session.beginTransaction();
+		session.save(participant);
+		transaction.commit();
+		return participant;
 	}
 
 	public void delete(Participant participant) {
-			Transaction transaction = this.session.beginTransaction();
-			session.delete(participant);
-			transaction.commit();
+		Transaction transaction = this.session.beginTransaction();
+		session.delete(participant);
+		transaction.commit();
 		
+	}
+
+	public Participant update(Participant participant) {
+		Transaction transaction = this.session.beginTransaction();
+		session.update(participant);
+		transaction.commit();
+		return participant;
 	}
 
 }
