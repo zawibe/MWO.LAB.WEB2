@@ -38,65 +38,48 @@ public class MeetingRestController {
 	return new ResponseEntity<Meeting>(meeting, HttpStatus.OK); 
 	}
 	
+	//1.3
 	@RequestMapping(value = "", method = RequestMethod.POST) 
 	public ResponseEntity<?> registerMeeting(@RequestBody Meeting meeting){
 	Meeting foundMeeting = meetingService.findById(meeting.getId());
 	if (foundMeeting != null) { 
-	return new ResponseEntity<String>("Unable to register. Participant with login " +  
+	return new ResponseEntity<String>("Unable to register. Meeting with ID " +  
 	meeting.getId() + "already exist", HttpStatus.CONFLICT);
-}
+	}
 	meetingService.add(meeting);
-	return new ResponseEntity<Meeting>(meeting, HttpStatus.CREATED);
-			
-}
-	/*
+	return new ResponseEntity<Meeting>(meeting, HttpStatus.CREATED);		
+	}	
+	//2.1
+	
+	@RequestMapping(value = "/{id}/participants", method = RequestMethod.POST)
+	public ResponseEntity<?> addParticipant(@PathVariable("id") long id, @RequestBody String foundParticipant) {
+		ParticipantService participantService = null;
+		Participant participant = participantService.findByLogin(foundParticipant);
+		if (participant == null) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		} 
+			meetingService.addParticipant(id, participant);
+			return new ResponseEntity<Participant>(participant, HttpStatus.OK);
+	}  
 	
 	//2.2
-	@RequestMapping(value = "/{id}/participants", method = RequestMethod.GET)
-	public ResponseEntity<?> getMeetingParticipants(@PathVariable("id") long id) {
-	    Meeting meeting = meetingService.findById(id);
-	if (meeting == null) { 
-	return new ResponseEntity(HttpStatus.NOT_FOUND);
-	} 
-	meeting.getParticipants();
-	return new ResponseEntity<Meeting>(meeting, HttpStatus.OK); 
+	   @RequestMapping(value = "/{id}/participants", method = RequestMethod.GET)
+		public ResponseEntity<?> getMeetingParticipants(@PathVariable("id") long id) {
+			Meeting meeting = meetingService.findById(id);
+			if (meeting == null) { 
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+				} 
+			return new ResponseEntity<Collection<Participant>>(meeting.getParticipants(), HttpStatus.OK);
+		}
+	   
+	//3.1
+	   @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+		public ResponseEntity<?> deleteMeeting(@PathVariable("id") long id) {
+			Meeting meeting = meetingService.findById(id);
+			if (meeting == null) { 
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+				} 
+			meetingService.delete(meeting);
+			return new ResponseEntity<Meeting>(meeting, HttpStatus.NO_CONTENT);
+		} 
 	}
-	
-	/*
-	
-	@RequestMapping(value = "", method = RequestMethod.POST) 
-	public ResponseEntity<?> registerParticipant(@RequestBody Participant participant){
-	Participant foundParticipant = participantService.findByLogin(participant.getLogin());
-	if (foundParticipant != null) { 
-	return new ResponseEntity<String>("Unable to register. Participant with login " +  
-	participant.getLogin() + "already exist", HttpStatus.CONFLICT);
-}
-	participantService.add(participant);
-	return new ResponseEntity<Participant>(participant, HttpStatus.CREATED);
-			
-}
-	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-	public ResponseEntity<?> deleteParticipant(@PathVariable("id") String login) {
-	    Participant participant = participantService.findByLogin(login);
-	if (participant == null) { 
-	return new ResponseEntity(HttpStatus.NOT_FOUND);
-	} 
-	participantService.delete(participant);
-	//return new ResponseEntity(HttpStatus.NO_CONTENT); 
-	return new ResponseEntity<Participant>(participant, HttpStatus.OK); 
-	}
-	
-	@RequestMapping(value = "/{id}", method = RequestMethod.PUT) 
-	public ResponseEntity<?> updateParticipant(@PathVariable("id") String login, 
-			@RequestBody Participant updatedParticipant){
-	Participant foundParticipant = participantService.findByLogin(login);
-	if (foundParticipant == null) { 
-		return new ResponseEntity(HttpStatus.NOT_FOUND);
-	}
-	foundParticipant.setPassword(updatedParticipant.getPassword()); 
-	participantService.update(foundParticipant);
-	return new ResponseEntity<Participant>(foundParticipant, HttpStatus.OK);
-			
-}
-	*/
-}

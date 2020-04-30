@@ -33,7 +33,6 @@ public class ParticipantRestController {
 	if (participant == null) { 
 	return new ResponseEntity(HttpStatus.NOT_FOUND);
 	} 
-
 	return new ResponseEntity<Participant>(participant, HttpStatus.OK); 
 	}
 	

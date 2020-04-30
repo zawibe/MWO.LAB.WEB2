@@ -18,7 +18,6 @@ public class ParticipantService {
 
 	public Collection<Participant> getAll() {
 		return session.createCriteria(Participant.class).list();
-		
 	}
 	
 	public Participant findByLogin(String login) {
@@ -37,7 +36,6 @@ public class ParticipantService {
 		Transaction transaction = this.session.beginTransaction();
 		session.delete(participant);
 		transaction.commit();
-		
 	}
 
 	public Participant update(Participant participant) {
@@ -46,5 +44,4 @@ public class ParticipantService {
 		transaction.commit();
 		return participant;
 	}
-
 }
