@@ -28,7 +28,6 @@ public class MeetingService {
 
 	public Meeting findById(long id) {
 		return (Meeting) session.get(Meeting.class, id);
-		
 	}
 
 	public Meeting add(Meeting meeting) {
@@ -38,26 +37,24 @@ public class MeetingService {
 		return meeting;
 	}
 
-	public void update(Meeting meeting) {
-		Transaction transaction = this.session.beginTransaction();
-		this.session.merge(meeting);
-		transaction.commit();
-		
-	}
-
 	public void delete(Meeting meeting) {
 		Transaction transaction = this.session.beginTransaction();
 		this.session.delete(meeting);
 		transaction.commit();
 	}
 
-	public void addParticipant(long id, Participant participant) {
+	public void addParticipant(Participant participant) {
 		Transaction transaction = this.session.beginTransaction();
-		Meeting meeting = findById(id);
-		meeting.addParticipant(participant);
-		this.session.merge(meeting);
+		addParticipant(participant);
+		this.session.merge(participant);
 		transaction.commit();
-		
+	}
+
+	public Meeting updateMeeting(Meeting meeting) {
+		Transaction transaction = this.session.beginTransaction();
+		session.update(meeting);
+		transaction.commit();
+		return meeting;
 	}
 	
 	}
